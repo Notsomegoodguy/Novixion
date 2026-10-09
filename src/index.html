@@ -19,11 +19,6 @@
       scroll-behavior: smooth;
     }
 
-    .site-page {
-      width: 100%;
-      height: 100%;
-    }
-
     .intro {
       position: fixed;
       inset: 0;
@@ -59,16 +54,66 @@
       transition: background-color 250ms ease, color 250ms ease, transform 250ms ease;
     }
 
-    .instagram-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+    .liquid-button {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      transition: color 250ms ease, transform 250ms ease;
     }
 
-    .instagram-link svg {
-      width: 1em;
-      height: 1em;
-      flex: none;
+    .liquid-button::before {
+      position: absolute;
+      z-index: 0;
+      top: 110%;
+      left: 50%;
+      width: 140%;
+      aspect-ratio: 1;
+      border-radius: 48% 52% 63% 37% / 44% 40% 60% 56%;
+      background: #c9a846;
+      content: "";
+      transform: translate(-50%, -50%) scale(0.05);
+    }
+
+    .liquid-button:hover::before,
+    .liquid-button:focus-visible::before {
+      animation: liquid-blob-fill 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .liquid-button:not(.liquid-button--gold):hover,
+    .liquid-button:not(.liquid-button--gold):focus-visible {
+      color: #222;
+    }
+
+    .liquid-button--gold::before {
+      background: #343333;
+    }
+
+    .liquid-button--gold:hover,
+    .liquid-button--gold:focus-visible {
+      color: #c9a846;
+      box-shadow: inset 0 0 0 0.03em #c9a846;
+    }
+
+    .liquid-button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes liquid-blob-fill {
+      0% {
+        border-radius: 48% 52% 63% 37% / 44% 40% 60% 56%;
+        transform: translate(-50%, -50%) scale(0.05) rotate(0deg);
+      }
+
+      55% {
+        border-radius: 62% 38% 43% 57% / 56% 45% 55% 44%;
+        transform: translate(-50%, -50%) scale(1.15) rotate(150deg);
+      }
+
+      100% {
+        border-radius: 42% 58% 55% 45% / 48% 60% 40% 52%;
+        transform: translate(-50%, -50%) scale(1.7) rotate(240deg);
+      }
     }
 
     .heading-drop {
@@ -76,7 +121,8 @@
     }
 
     .heading-slide {
-      animation: heading-slide-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 700ms both;
+	    -webkit-animation: heading-slide-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+	    animation: heading-slide-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
     }
 
     @keyframes heading-drop-in {
@@ -91,17 +137,32 @@
       }
     }
 
-    @keyframes heading-slide-in {
-      from {
-        opacity: 0;
-        transform: translateX(10em);
-      }
 
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+  @-webkit-keyframes heading-slide-in {
+    0% {
+      -webkit-transform: translateX(1000px);
+              transform: translateX(1000px);
+      opacity: 1;
     }
+    100% {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes heading-slide-in {
+    0% {
+      -webkit-transform: translateX(1000px);
+              transform: translateX(1000px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
 
     @media (prefers-reduced-motion: reduce) {
       .heading-drop,
@@ -109,9 +170,16 @@
       .intro,
       .site-page,
       .hover-card,
-      .hover-control {
+      .hover-control,
+      .liquid-button {
         animation: none;
         transition: none;
+      }
+
+      .liquid-button:hover::before,
+      .liquid-button:focus-visible::before {
+        animation: none;
+        transform: translate(-50%, -50%) scale(1.7);
       }
     }
 
@@ -126,7 +194,7 @@
         display: flow-root;
         height: auto;
         min-height: 100dvh;
-        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+        padding-bottom: max(5rem, env(safe-area-inset-bottom));
         box-sizing: border-box;
       }
 
@@ -183,8 +251,8 @@
       Your browser does not support the video element.
     </video>
   </section>
-  <main class="site-page pb-10" id="site-page" hidden aria-hidden="true">
-    <header class="bg-[#222222]/50 backdrop-blur-lg pt-3 pb-1.5 md:py-3 px-5 z-50 fixed top-0 left-0 right-0 flex justify-between items-center">
+  <main class="site-page md:pb-20" id="site-page" hidden aria-hidden="true">
+    <header class="bg-[#222222]/50 backdrop-blur-lg border-b-[0.008em] border-slate-200 pt-3 pb-1.5 md:py-3 px-5 z-50 fixed top-0 left-0 right-0 flex justify-between items-center">
       <div class="flex items-center">
         <img class="object-contain object-center w-16" src="./images/logo%20transparent%20bg.png" alt="Novixion">
         
@@ -197,73 +265,57 @@
     </header>
 
     <section class="hero-section mt-52 flex flex-col items-center text-center">
-      <p class="hero-heading text-white md:text-7xl text-3xl whitespace-pre-line font-semibold heading-drop">Our site is almost ready.<span class="heading-slide text-[#C9A846]"> 
+      <p class="hero-heading text-white md:text-7xl text-[2.1rem] whitespace-pre-line font-bold heading-drop">Our site is almost ready.<span class="heading-slide text-[#C9A846]"> 
         But Our team is already 
         here</span></p>
-      <p class="hero-description text-sm text-slate-200 mt-4">But you can pick how you would love to connect. No waiting needed.</p>
+      <p class="hero-description text-sm md:text-xl text-slate-200 mt-4">But you can pick how you would love to connect. No waiting needed.</p>
     </section>
 
     <section class="grid grid-cols-1 gap-5 md:grid-cols-2 mt-20 px-10">
-      <div class="hover-card ring-[0.03em] ring-[#C9A846] px-5 py-5 rounded-xl space-y-2 bg-[#343333] inset-0 backdrop-blur-lg hover:shadow-lg hover:shadow-white/20">
+      <div class="hover-card ring-[0.03em] ring-[#C9A846] px-5 py-5 rounded-xl space-y-2 bg-[#343333] inset-0 backdrop-blur-lg">
         <p class="waitlist-label text-xl md:text-4xl text-white font-medium">Join the waitlist</p>
-        <p class="text-slate-200 text-[0.8rem] text-sm whitespace-pre-line">Be the first to know when our website
+        <p class="text-slate-200 text-[0.8rem] text-sm md:text-lg whitespace-pre-line">Be the first to know when our website
            goes live, and first in line for what we
             launch with.</p>
-        <button class="hover-control w-full py-2 bg-[#C9A846] hover:bg-[#947c33] transition-all duration-200 ease-in-out text-[#222222] hover:text-slate-300 rounded-full text-sm">Join the waitlist</button>
+        <button class="liquid-button liquid-button--gold hover-control w-full py-2 bg-[#C9A846] text-[#222222] rounded-full text-sm md:text-lg"><span>Join the waitlist</span></button>
       </div>
 
-      <div class="hover-card bg-[#343333] inset-0 backdrop-blur-lg hover:shadow-lg hover:shadow-white/20 ring-[0.03em] ring-[#C9A846] px-5 py-5 rounded-xl space-y-2">
+      <div class="hover-card bg-[#343333] inset-0 backdrop-blur-lg ring-[0.03em] ring-[#C9A846] px-5 py-5 rounded-xl space-y-2">
         <img class="w-20 h-20" src="./images/ICON 7.png" alt="">
         <p class="waitlist-label text-xl md:text-4xl text-white font-medium">Talk to us now</p>
-        <p class="text-slate-200 text-[0.8rem] text-sm whitespace-pre-line">Have a project in mind, skip the
+        <p class="text-slate-200 text-[0.8rem] text-sm md:text-lg whitespace-pre-line">Have a project in mind, skip the
            wait and message us directly.</p>
-        <div class="gap-3 text-white text-sm flex">
-          <a href="https://wa.me/2349030732878" target="_blank" rel="noopener noreferrer"><button class="hover-control px-3 py-2 hover:bg-[#C9A846] hover:text-[#222222] rounded-full ring-[0.03em] ring-[#C9A846]">WhatsApp</button></a>
-          <a href="mailto:hello@novixion.agency"><button class="hover-control px-3 py-2 hover:bg-[#C9A846] hover:text-[#222222] rounded-full ring-[0.03em] ring-[#C9A846]">Email</button></a>
-          <a href=""><button class="hover-control px-3 py-2 hover:bg-[#C9A846] hover:text-[#222222] rounded-full ring-[0.03em] ring-[#C9A846]">Instagram DM</button></a>
+        <div class="gap-3 text-white text-sm md:text-lg flex">
+          <a href="https://wa.me/2349030732878" target="_blank" rel="noopener noreferrer"><button class="liquid-button hover-control px-3 py-2 rounded-full ring-[0.03em] ring-[#C9A846]"><span>WhatsApp</span></button></a>
+          <a href="mailto:business@thenovixion.com"><button class="liquid-button hover-control px-3 py-2 rounded-full ring-[0.03em] ring-[#C9A846]"><span>Email</span></button></a>
+          <a href=""><button class="liquid-button hover-control px-3 py-2 rounded-full ring-[0.03em] ring-[#C9A846]"><span>Instagram DM</span></button></a>
         </div>
       </div>
     </section>
 
-    <section class="mt-5 px-10 flex space-x-2 text-sm md:text-md md:space-x-5 items-center text-slate-300">
-      <a class="instagram-link" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
-          <path d="M0 0h512v512H0z" fill="none" />
-          <radialGradient id="instagram-gradient-warm" cx="-286.878" cy="685.721" r="255.952" gradientTransform="matrix(0 -1.982 1.8439 0 -1128.4 -17.235)" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#fd5" />
-            <stop offset=".1" stop-color="#fd5" />
-            <stop offset=".5" stop-color="#ff543e" />
-            <stop offset="1" stop-color="#c837ab" />
-          </radialGradient>
-          <path fill="url(#instagram-gradient-warm)" d="M256.1.1C149.2.1 118 .2 111.9.7C89.9 2.5 76.3 6 61.4 13.4C50 19.1 40.9 25.6 32 34.9C15.8 51.8 5.9 72.5 2.4 97.2C.7 109.2.2 111.6.1 172.8V256c0 106.8.1 138 .6 144.1c1.8 21.3 5.1 34.8 12.2 49.5c13.5 28.1 39.4 49.2 69.9 57.1c10.6 2.7 22.2 4.2 37.2 4.9c6.3.3 71 .5 135.6.5s129.3-.1 135.5-.4c17.3-.8 27.4-2.2 38.5-5c30.7-7.9 56.1-28.7 69.9-57.2c7-14.3 10.5-28.3 12.1-48.5c.3-4.4.5-74.7.5-144.9s-.2-140.4-.5-144.8c-1.6-20.6-5.1-34.4-12.3-49c-5.9-12-12.4-20.9-21.9-30c-16.9-16.2-37.6-26-62.3-29.6C403.1 1 400.8.5 339.6.4h-83.5z" />
-          <radialGradient id="instagram-gradient-cool" cx="394.107" cy="480.96" r="255.952" gradientTransform="rotate(78.677 1180.95 631.602)scale(.886 3.6529)" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#3771c8" />
-            <stop offset=".128" stop-color="#3771c8" />
-            <stop offset="1" stop-color="#60f" stop-opacity="0" />
-          </radialGradient>
-          <path fill="url(#instagram-gradient-cool)" d="M256.1.1C149.2.1 118 .2 111.9.7C89.9 2.5 76.3 6 61.4 13.4C50 19.1 40.9 25.6 32 34.9C15.8 51.8 5.9 72.5 2.4 97.2C.7 109.2.2 111.6.1 172.8V256c0 106.8.1 138 .6 144.1c1.8 21.3 5.1 34.8 12.2 49.5c13.5 28.1 39.4 49.2 69.9 57.1c10.6 2.7 22.2 4.2 37.2 4.9c6.3.3 71 .5 135.6.5s129.3-.1 135.5-.4c17.3-.8 27.4-2.2 38.5-5c30.7-7.9 56.1-28.7 69.9-57.2c7-14.3 10.5-28.3 12.1-48.5c.3-4.4.5-74.7.5-144.9s-.2-140.4-.5-144.8c-1.6-20.6-5.1-34.4-12.3-49c-5.9-12-12.4-20.9-21.9-30c-16.9-16.2-37.6-26-62.3-29.6C403.1 1 400.8.5 339.6.4h-83.5z" />
-          <path fill="#fff" d="M256 67c-51.3 0-57.8.2-77.9 1.1s-33.9 4.1-45.9 8.8c-12.4 4.8-23 11.3-33.5 21.8s-17 21.1-21.8 33.5c-4.7 12-7.9 25.8-8.8 45.9c-.9 20.2-1.1 26.6-1.1 77.9s.2 57.8 1.1 77.9s4.1 33.9 8.8 45.9c4.8 12.4 11.3 23 21.8 33.5s21 17 33.5 21.8c12 4.7 25.8 7.9 45.9 8.8c20.2.9 26.6 1.1 77.9 1.1s57.8-.2 77.9-1.1s33.9-4.1 45.9-8.8c12.4-4.8 23-11.3 33.5-21.8s17-21.1 21.8-33.5c4.6-12 7.8-25.8 8.8-45.9c.9-20.2 1.1-26.6 1.1-77.9s-.2-57.8-1.1-77.9s-4.1-33.9-8.8-45.9c-4.8-12.4-11.3-23-21.8-33.5s-21.1-17-33.5-21.8c-12-4.7-25.8-7.9-45.9-8.8c-20.2-.9-26.6-1.1-77.9-1.1m-17 34.1h17c50.5 0 56.4.2 76.4 1.1c18.4.8 28.4 3.9 35.1 6.5c8.8 3.4 15.1 7.5 21.7 14.1s10.7 12.9 14.1 21.7c2.6 6.7 5.7 16.7 6.5 35.1c.9 19.9 1.1 25.9 1.1 76.4s-.2 56.4-1.1 76.4c-.8 18.4-3.9 28.4-6.5 35.1c-3.4 8.8-7.5 15.1-14.1 21.7s-12.9 10.7-21.7 14.1c-6.7 2.6-16.7 5.7-35.1 6.5c-19.9.9-25.9 1.1-76.4 1.1s-56.5-.2-76.4-1.1c-18.4-.9-28.4-3.9-35.1-6.5c-8.8-3.4-15.1-7.5-21.7-14.1s-10.7-12.9-14.1-21.7c-2.6-6.7-5.7-16.7-6.5-35.1c-.9-19.9-1.1-25.9-1.1-76.4s.2-56.4 1.1-76.4c.8-18.4 3.9-28.4 6.5-35.1c3.4-8.8 7.5-15.1 14.1-21.7s12.9-10.7 21.7-14.1c6.7-2.6 16.7-5.7 35.1-6.5c17.4-.9 24.2-1.1 59.4-1.1m117.9 31.4c-12.5 0-22.7 10.1-22.7 22.7c0 12.5 10.2 22.7 22.7 22.7s22.7-10.2 22.7-22.7s-10.2-22.8-22.7-22.7M256 159c-53.6 0-97.1 43.5-97.1 97.1s43.5 97 97.1 97s97-43.4 97-97s-43.4-97.1-97-97.1m0 34c34.8 0 63 28.2 63 63s-28.2 63-63 63s-63-28.2-63-63s28.2-63 63-63" />
+    <section class="mt-5 flex space-x-2 text-sm md:text-md md:space-x-5 justify-center md:px-10 md:justify-start items-center text-slate-300">
+      <a class="space-x-1 flex items-center" href="#">
+       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path fill="#c9a846" fill-rule="evenodd" d="M7.465 1.066C8.638 1.012 9.012 1 12 1s3.362.013 4.534.066s1.972.24 2.672.511c.733.277 1.398.71 1.948 1.27c.56.549.992 1.213 1.268 1.947c.272.7.458 1.5.512 2.67C22.988 8.639 23 9.013 23 12s-.013 3.362-.066 4.535c-.053 1.17-.24 1.97-.512 2.67a5.4 5.4 0 0 1-1.268 1.949c-.55.56-1.215.992-1.948 1.268c-.7.272-1.5.458-2.67.512c-1.174.054-1.548.066-4.536.066s-3.362-.013-4.535-.066c-1.17-.053-1.97-.24-2.67-.512a5.4 5.4 0 0 1-1.949-1.268a5.4 5.4 0 0 1-1.269-1.948c-.271-.7-.457-1.5-.511-2.67C1.012 15.361 1 14.987 1 12s.013-3.362.066-4.534s.24-1.972.511-2.672a5.4 5.4 0 0 1 1.27-1.948a5.4 5.4 0 0 1 1.947-1.269c.7-.271 1.5-.457 2.67-.511m8.98 1.98c-1.16-.053-1.508-.064-4.445-.064s-3.285.011-4.445.064c-1.073.049-1.655.228-2.043.379c-.513.2-.88.437-1.265.822a3.4 3.4 0 0 0-.822 1.265c-.151.388-.33.97-.379 2.043c-.053 1.16-.064 1.508-.064 4.445s.011 3.285.064 4.445c.049 1.073.228 1.655.379 2.043c.176.477.457.91.822 1.265c.355.365.788.646 1.265.822c.388.151.97.33 2.043.379c1.16.053 1.507.064 4.445.064s3.285-.011 4.445-.064c1.073-.049 1.655-.228 2.043-.379c.513-.2.88-.437 1.265-.822c.365-.355.646-.788.822-1.265c.151-.388.33-.97.379-2.043c.053-1.16.064-1.508.064-4.445s-.011-3.285-.064-4.445c-.049-1.073-.228-1.655-.379-2.043c-.2-.513-.437-.88-.822-1.265a3.4 3.4 0 0 0-1.265-.822c-.388-.151-.97-.33-2.043-.379m-5.85 12.345a3.669 3.669 0 0 0 4-5.986a3.67 3.67 0 1 0-4 5.986M8.002 8.002a5.654 5.654 0 1 1 7.996 7.996a5.654 5.654 0 0 1-7.996-7.996m10.906-.814a1.337 1.337 0 1 0-1.89-1.89a1.337 1.337 0 0 0 1.89 1.89" clip-rule="evenodd" />
         </svg>
+
         <p>Instagram</p>
       </a>
-      <a class="instagram-link" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
-          <path d="M0 0h128v128H0z" fill="none" />
-          <path fill="#0076b2" d="M116 3H12a8.91 8.91 0 0 0-9 8.8v104.42a8.91 8.91 0 0 0 9 8.78h104a8.93 8.93 0 0 0 9-8.81V11.77A8.93 8.93 0 0 0 116 3" />
-          <path fill="#fff" d="M21.06 48.73h18.11V107H21.06zm9.06-29a10.5 10.5 0 1 1-10.5 10.49a10.5 10.5 0 0 1 10.5-10.49m20.41 29h17.36v8h.24c2.42-4.58 8.32-9.41 17.13-9.41C103.6 47.28 107 59.35 107 75v32H88.89V78.65c0-6.75-.12-15.44-9.41-15.44s-10.87 7.36-10.87 15V107H50.53z" />
+      <a class="space-x-1 flex items-center" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path fill="#c9a846" fill-rule="evenodd" d="M1 2.838A1.84 1.84 0 0 1 2.838 1H21.16A1.837 1.837 0 0 1 23 2.838V21.16A1.84 1.84 0 0 1 21.161 23H2.838A1.84 1.84 0 0 1 1 21.161zm8.708 6.55h2.979v1.496c.43-.86 1.53-1.634 3.183-1.634c3.169 0 3.92 1.713 3.92 4.856v5.822h-3.207v-5.106c0-1.79-.43-2.8-1.522-2.8c-1.515 0-2.145 1.089-2.145 2.8v5.106H9.708zm-5.5 10.403h3.208V9.25H4.208zM7.875 5.812a2.063 2.063 0 1 1-4.125 0a2.063 2.063 0 0 1 4.125 0" clip-rule="evenodd" />
         </svg>
+
         <p>LinkedIn</p>
       </a>
-      <a class="instagram-link" href="mailto:hello@novixion.agency">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
-          <path d="M0 0h512v512H0z" fill="none" />
-          <path fill="#4285f4" d="M34.9 448h81.5V250.2L0 163v250.2C0 432.5 15.7 448 34.9 448" />
-          <path fill="#34a853" d="M395.6 448h81.5c19.3 0 34.9-15.7 34.9-34.9V163l-116.4 87.3" />
-          <path fill="#fbbc04" d="M395.6 99v151.3L512 163v-46.5c0-43.2-49.3-67.8-83.8-41.9" />
-          <path fill="#ea4335" d="M116.4 250.2V99L256 203.7L395.6 99v151.3L256 355" />
-          <path fill="#c5221f" d="M0 116.4V163l116.4 87.3V99L83.8 74.5C49.2 48.6 0 73.2 0 116.4" />
+      <a class="space-x-1 flex items-center" href="mailto:business@thenovixion.com">
+       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path fill="#c9a846" d="M20 18h-2V9.25L12 13L6 9.25V18H4V6h1.2l6.8 4.25L18.8 6H20m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2" />
         </svg>
-        <p>hello@novixion.agency</p>
+        <p>business@thenovixion.com</p>
       </a>
     </section>
   </main>
